@@ -1,2 +1,2 @@
 # SimpleSearchOfSubstrings
-Written algorithm searches substring in string 
+Written algorithm searches substrings in string 
