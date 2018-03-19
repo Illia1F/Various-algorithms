@@ -1,50 +1,41 @@
 #include <iostream> // cout
 #include <string>
 #include <vector>
-#include <map>
 #include <algorithm>
 
-auto sundaya(const std::string& message, const std::string& pattern)
+auto sunday(const std::string& message, const std::string& pattern)
+// a function implements a sunday algorithm
 {
-    // a vector which stores the results
+    size_t size_pattern = pattern.size();
+    size_t size_message = message.size();
+    // a table of result
     std::vector<int> result;
-    // a map, which plays the role as the help table
-    std::map<char, int> helpTab;
-    // we insert characters with its indexes from a pattern in the help table
-    for(int i=pattern.size()-1; i>=0; --i)
-        helpTab.insert(std::make_pair(pattern[i], i));
+    // an offset table
+    unsigned char* offsetTable = new unsigned char[256];
+    // initialize the table of result
+    for(size_t i=0; i<256; i++)
+        offsetTable[i] = size_pattern + 1;
 
-    // variable stores sizes of strings into which loops is going
-    size_t into_pattern = pattern.size();
-    size_t into_message = message.size() - into_pattern + 1;
-    for(size_t i = 0; i < into_message; ++i){
-        for(size_t j = 0; j<into_pattern; ++j){
-            // check whether fit an element or not
-            if(message[i+j] == pattern[j]){
-                // check whether we have gone the whole pattern or not
-                if(j == into_pattern - 1)
-                // insert a result to the result vector
-                    result.push_back(i);
-            }
-            else
-            {
-                // if we are about to exit from a scope
-                if(i+into_pattern == message.size()) break;
+    for(size_t i=0; i<size_pattern; i++)
+        offsetTable[static_cast<unsigned char>(pattern[i])] = size_pattern - i;
 
-                // find a next element and check if it is in the pattern
-                auto t = helpTab.find(message.at(i+into_pattern));
+    // search the matches
+    for(size_t i = 0; i <= size_message - size_pattern; i+=offsetTable[static_cast<unsigned char>(message[i + size_pattern])]){
+        
+        size_t j;
+        for(j = 0; j < size_pattern && message[i+j] == pattern[j]; ++j);
 
-                if(t != helpTab.end())
-                    // if a next element is in the pattern
-                    i += into_pattern - t->second - 1;
-                // and an opposite option
-                else i += into_pattern;
-
-                break;
-            }
-        }
+        // if we found the match 
+        if(j == size_pattern)
+            // insert a start index of this match int the result
+            result.push_back(i);
     }
+
+    // free up memory
+    delete[] offsetTable;
+
     return result;
+
 }
 
 void show(int i)
@@ -57,7 +48,7 @@ int main()
     std::string text = "abcabbdcabcababcdaca";
     std::string pattern = "aba";
     // the result vector which stores indexes of starts of a pattern in the text
-    auto result = sundaya(text, pattern);
+    auto result = sunday(text, pattern);
 
     // show
     std::for_each(result.begin(), result.end(), show);
