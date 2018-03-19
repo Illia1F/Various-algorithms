@@ -15,9 +15,8 @@ auto simpleSearch(string str, string seekedStr)
     // loop is going on to n-m in order to no exit from border
     for(int i=0; i<=n-m; i++){
         for(int j=0, k=0; j<m; j++){
-            // is the substring equal to seeked string?
-            if(str[i+j] == seekedStr[j])
-                k++;
+            if(message[i+j] != pattern[j]) break;
+            else k++;
             // if substring equals to seeked string then we add starting index to vector
             if(k == m)
                 results.push_back(i);
