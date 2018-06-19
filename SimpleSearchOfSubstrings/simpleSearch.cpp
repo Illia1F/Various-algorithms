@@ -5,12 +5,12 @@
 using namespace std;
 
 // the function implements simple search for substrings
-auto simpleSearch(string str, string seekedStr)
+auto simpleSearch(const string& message, const string& pattern)
 {
     // the vector which stores starting substrings indexes
     vector<int> results;
     // variables which are the sizes of strings
-    int n = str.size(), m = seekedStr.size();
+    int n = message.size(), m = pattern.size();
 
     // loop is going on to n-m in order to no exit from border
     for(int i=0; i<=n-m; i++){
@@ -34,8 +34,8 @@ void show(int i)
 int main()
 {
     string str = "Hello my friends my";
-    string seekedStr = "my";
-    auto results = simpleSearch(str, seekedStr);
+    string soughtStr = "my";
+    auto results = simpleSearch(str, soughtStr);
 
     for_each(results.begin(), results.end(), show);
 
